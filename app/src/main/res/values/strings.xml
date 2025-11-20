@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">WarpWeatherApp</string>
+    <string name="ok">OK</string>
+    <string name="enter_city_name">Enter city name</string>
+    <string name="search">Search</string>
+    <string name="use_search_bar_to_get_forecast">Use search bar to get forecast</string>
+    <string name="temperature">%1$s°C</string>
 </resources>

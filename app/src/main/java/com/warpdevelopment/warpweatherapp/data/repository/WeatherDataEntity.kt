@@ -1,5 +1,8 @@
 package com.warpdevelopment.warpweatherapp.data.repository
 
+import com.warpdevelopment.warpweatherapp.domain.model.WeatherData
+import java.math.RoundingMode
+
 data class WeatherDataEntity(
     val coord: CoordEntity,
     val weather: List<WeatherEntity>,
@@ -14,7 +17,21 @@ data class WeatherDataEntity(
     val id: Long,
     val name: String,
     val cod: Long,
-)
+) {
+    companion object {
+        fun WeatherDataEntity.toWeatherData(): WeatherData {
+            val weather = weather.first()
+            return WeatherData(
+                city = name,
+                temperature = main.temp_max.toBigDecimal()
+                    .setScale(0, RoundingMode.HALF_EVEN),
+                condition = weather.main,
+                description = weather.description,
+                icon = weather.icon
+            )
+        }
+    }
+}
 
 data class CoordEntity(
     val lon: Double,

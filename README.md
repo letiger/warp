@@ -9,6 +9,9 @@ Add your open weather api key in the local.properties file:
 
 
 # Installation
+```bash
+./gradlew app:installDebug
+```
 
 # Technology
 - `Kotlin`

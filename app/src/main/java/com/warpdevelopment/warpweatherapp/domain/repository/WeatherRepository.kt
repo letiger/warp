@@ -1,7 +1,7 @@
 package com.warpdevelopment.warpweatherapp.domain.repository
 
-import com.warpdevelopment.warpweatherapp.data.repository.WeatherDataEntity
+import com.warpdevelopment.warpweatherapp.domain.model.WeatherData
 
 interface WeatherRepository {
-    suspend fun weatherByCity(query: String): Result<WeatherDataEntity>
+    suspend fun weatherByCity(query: String): Result<WeatherData>
 }

@@ -7,5 +7,5 @@ data class WeatherData(
     val temperature: BigDecimal,
     val condition: String,
     val description: String,
-    val iconRes: String,
+    val icon: String,
 )

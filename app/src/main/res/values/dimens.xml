@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="dimension_all_none">0dp</dimen>
+    <dimen name="dimension_all_micro">1dp</dimen>
+    <dimen name="dimension_all_tiny">4dp</dimen>
+    <dimen name="dimension_all_small_tiny">6dp</dimen>
+    <dimen name="dimension_all_small">8dp</dimen>
+    <dimen name="dimension_all_narrow">10dp</dimen>
+    <dimen name="dimension_all_medium_small">12dp</dimen>
+    <dimen name="dimension_all_medium_regular">14dp</dimen>
+    <dimen name="dimension_all_medium">16dp</dimen>
+    <dimen name="dimension_all_medium_bigger">18dp</dimen>
+    <dimen name="dimension_all_medium_big">20dp</dimen>
+    <dimen name="dimension_all_big">24dp</dimen>
+    <dimen name="dimension_all_large">32dp</dimen>
+    <dimen name="dimension_all_huge">40dp</dimen>
+    <dimen name="dimension_all_enormous">48dp</dimen>
+</resources>
