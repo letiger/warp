@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -12,6 +14,10 @@ android {
         version = release(36)
     }
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     defaultConfig {
         applicationId = "com.warpdevelopment.warpweatherapp"
         minSdk = 24
@@ -20,6 +26,19 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val properties = Properties()
+        project.rootProject.file("local.properties").inputStream().use { properties.load(it) }
+        buildConfigField(
+            type = "String",
+            name = "OPEN_WEATHER_KEY",
+            value = "${properties.getProperty("OPEN_WEATHER_KEY")}"
+        )
+        buildConfigField(
+            type = "String",
+            name = "BASE_URL",
+            value = "\"https://api.openweathermap.org/data/2.5/\""
+        )
     }
 
     buildTypes {
@@ -65,4 +84,10 @@ dependencies {
     implementation(libs.hilt.navigation.compose)
     ksp(libs.dagger.hilt.compiler)
     ksp(libs.dagger.hilt.android.compiler)
+
+    // Retrofit
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
 }
