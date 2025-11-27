@@ -10,6 +10,8 @@ A simple weather application using Kotlin and Jetpack Compose. The architecture 
 
 
 # Installation
+Use the below command in terminal to create an apk that can be installed on an android device. 
+The apk is located at `app/build/outputs/apk/debug/app-debug.apk`
 ```bash
 ./gradlew app:installDebug
 ```
@@ -27,7 +29,9 @@ The forecast includes details like:
 
 ## Screenshots
 
-<img src="warp.gif" width="200"/> | <img src="init.png" width="200"/> | <img src="success.png" width="200"/> | <img src="failure.png" width="200"/>
+<img src="warp.gif" width="200"/> | <img src="init.png" width="200"/> | <img src="success.png" width="200"/> 
+<br /><br />
+<img src="warp2.gif" width="200"/> | <img src="failure_no_results.png" width="200"/> | <img src="failure_no_network.png" width="200"/>
 
 
 # Technology
@@ -36,3 +40,4 @@ The forecast includes details like:
 - `Hilt Dependency-Injection`
 - `Retrofit`
 - `OkHttpClient`
+- `Kotlin Flow`

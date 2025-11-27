@@ -1,5 +1,7 @@
 package com.warpdevelopment.warpweatherapp.presentation.weatherscreen
 
+import android.os.Build
+import androidx.annotation.RequiresExtension
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
@@ -47,6 +50,7 @@ import com.warpdevelopment.warpweatherapp.ui.theme.WarpWeatherAppTheme
 import java.math.BigDecimal
 import java.math.RoundingMode
 
+@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 @Composable
 fun WeatherScreenContainer(
     viewModel: WeatherViewModel = hiltViewModel()
@@ -100,11 +104,8 @@ private fun WeatherScreen(
             }
             OutlinedTextField(
                 value = viewState.city,
-                onValueChange = {
-                    it.takeIf { it.isNotEmpty() }
-                        ?.let {
-                            onSearch(it)
-                        }
+                onValueChange = { input ->
+                    input.takeIf { it.isNotEmpty() }?.let { onSearch(it) }
                 },
                 shape = RoundedCornerShape(
                     dimensionResource(R.dimen.dimension_all_medium_small)
@@ -130,9 +131,12 @@ private fun WeatherScreen(
 
             if (viewState.isLoading) {
                 CircularProgressIndicator(
-                    modifier = Modifier.padding(
-                        top = dimensionResource(R.dimen.dimension_all_medium)
-                    )
+                    modifier = Modifier
+                        .padding(
+                            top = dimensionResource(R.dimen.dimension_all_medium)
+                        )
+                        .size(dimensionResource(R.dimen.dimension_all_enormous))
+                        .align(Alignment.CenterHorizontally)
                 )
                 return@Scaffold
             }
@@ -152,7 +156,7 @@ private fun WeatherScreen(
 }
 
 @Composable
-fun WeatherCard(weather: WeatherData) {
+private fun WeatherCard(weather: WeatherData) {
     val context = LocalContext.current
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -210,8 +214,8 @@ private fun WeatherScreenSuccessPreview() {
         WeatherScreen(
             viewState = WeatherScreenUiState(
                 isLoading = false,
-                weather = weatherData,
                 errorMessage = null,
+                weather = weatherData,
             ),
             onSearch = {},
             onReset = {},
@@ -226,7 +230,6 @@ private fun WeatherScreenFailurePreview() {
         WeatherScreen(
             viewState = WeatherScreenUiState(
                 isLoading = false,
-                weather = null,
                 errorMessage = "Something went wrong"
             ),
             onSearch = {},
@@ -242,7 +245,6 @@ private fun WeatherScreenLoadingPreview() {
         WeatherScreen(
             viewState = WeatherScreenUiState(
                 isLoading = true,
-                weather = null,
                 errorMessage = null,
             ),
             onSearch = {},
@@ -258,7 +260,6 @@ private fun WeatherScreenErrorPreview() {
         WeatherScreen(
             viewState = WeatherScreenUiState(
                 isLoading = false,
-                weather = null,
                 errorMessage = "no results for your search",
             ),
             onSearch = {},
