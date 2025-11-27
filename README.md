@@ -27,7 +27,9 @@ The forecast includes details like:
 
 ## Screenshots
 
-<img src="warp.gif" width="200"/> | <img src="init.png" width="200"/> | <img src="success.png" width="200"/> | <img src="failure.png" width="200"/>
+<img src="warp.gif" width="200"/> | <img src="init.png" width="200"/> | <img src="success.png" width="200"/> 
+<br /><br />
+<img src="warp2.gif" width="200"/> | <img src="failure_no_results.png" width="200"/> | <img src="failure_no_network.png" width="200"/>
 
 
 # Technology

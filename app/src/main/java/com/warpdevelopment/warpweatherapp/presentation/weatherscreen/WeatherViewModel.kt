@@ -1,51 +1,73 @@
 package com.warpdevelopment.warpweatherapp.presentation.weatherscreen
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.warpdevelopment.warpweatherapp.domain.repository.WeatherRepository
+import android.os.Build
+import androidx.annotation.RequiresExtension
+import com.warpdevelopment.warpweatherapp.core.BaseViewModel
+import com.warpdevelopment.warpweatherapp.core.DispatcherProvider
+import com.warpdevelopment.warpweatherapp.core.Resource
+import com.warpdevelopment.warpweatherapp.domain.usecase.GetWeatherByCity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+private const val TIME_OUT = 2000L
+
 @HiltViewModel
+@RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
 class WeatherViewModel @Inject constructor(
-    private val weatherRepository: WeatherRepository,
-) : ViewModel() {
+    private val getWeatherByCity: GetWeatherByCity,
+    dispatcherProvider: DispatcherProvider
+) : BaseViewModel(dispatcherProvider) {
     private val _viewState = MutableStateFlow(WeatherScreenUiState())
-    val viewState: StateFlow<WeatherScreenUiState> = _viewState
+    val viewState: StateFlow<WeatherScreenUiState> = _viewState.asStateFlow()
 
     private var searchJob: Job? = null
 
     fun onSearch(city: String) {
-        _viewState.update { it.copy(city = city, isLoading = true) }
-
+        _viewState.update {
+            it.copy(isLoading = true, city = city)
+        }
         searchJob?.cancel()
-        searchJob = viewModelScope.launch {
-            delay(350) // debounce
-            weatherRepository.weatherByCity(city).fold(
-                onSuccess = { weatherData ->
-                    _viewState.update {
-                        it.copy(
-                            isLoading = false,
-                            weather = weatherData
-                        )
+
+        searchJob = launchOnIO {
+            delay(TIME_OUT)
+            val params = GetWeatherByCity.Params(city.trim())
+            getWeatherByCity.invoke(params).collect { response ->
+                when (response) {
+                    is Resource.Error -> {
+                        _viewState.update {
+                            it.copy(
+                                isLoading = false,
+                                errorMessage = response.message,
+                                weather = null
+                            )
+                        }
                     }
-                },
-                onFailure = {
-                    _viewState.update {
-                        it.copy(
-                            isLoading = false,
-                            weather = null,
-                            errorMessage = "no results for your search"
-                        )
+
+                    is Resource.Loading -> {
+                        if (_viewState.value.isLoading.not()) {
+                            _viewState.update {
+                                it.copy(isLoading = true, weather = null)
+                            }
+                        }
+                    }
+
+                    is Resource.Success -> response.data?.apply {
+                        _viewState.update {
+                            it.copy(
+                                isLoading = false,
+                                weather = this
+                            )
+                        }
                     }
                 }
-            )
+
+            }
         }
     }
 
@@ -53,9 +75,9 @@ class WeatherViewModel @Inject constructor(
         _viewState.update {
             it.copy(
                 isLoading = false,
-                weather = if (clearText) null else viewState.value.weather,
                 errorMessage = null,
-                city = if (clearText) "" else viewState.value.city
+                weather = if (clearText) null else _viewState.value.weather,
+                city = if (clearText) "" else _viewState.value.city
             )
         }
     }

@@ -13,17 +13,13 @@ class WeatherRepositoryImpl(
     private val apiKey: String
 ) : WeatherRepository {
 
-    override suspend fun weatherByCity(query: String): Result<WeatherData> {
-        return try {
-            val results = api.searchCities(
-                apiKey = apiKey,
-                query = query,
-                units = UNIT_OF_MEASURE,
-                lang = LANGUAGE,
-            ).toWeatherData()
-            Result.success(results)
-        } catch (exception: Throwable) {
-            Result.failure(exception)
-        }
+    override suspend fun weatherByCity(query: String): WeatherData {
+        val cities = api.searchCities(
+            apiKey = apiKey,
+            query = query,
+            units = UNIT_OF_MEASURE,
+            lang = LANGUAGE,
+        ).toWeatherData()
+        return cities
     }
 }
